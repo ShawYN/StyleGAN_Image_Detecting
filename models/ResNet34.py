@@ -5,7 +5,7 @@ from torch.nn import functional as F
 
 class ResidualBlock(nn.Module):
     '''
-    实现子module: Residual Block
+    implement sub-module: Residual Block
     '''
     def __init__(self, inchannel, outchannel, stride=1, shortcut=None):
         super(ResidualBlock, self).__init__()
@@ -25,33 +25,33 @@ class ResidualBlock(nn.Module):
 
 class ResNet34(BasicModule):
     '''
-    实现主module：ResNet34
-    ResNet34包含多个layer，每个layer又包含多个Residual block
-    用子module来实现Residual block，用_make_layer函数来实现layer
+    To implement the main module：ResNet34
+    ResNet34 includes multiple layers，each of them contains multiple Residual blocks
+    use sub-module to implement Residual block，use function _make_layer to implement layer
     '''
     def __init__(self, num_classes=2):
         super(ResNet34, self).__init__()
         self.model_name = 'resnet34'
 
-        # 前几层: 图像转换
+        # Front few layers: Image transformation
         self.pre = nn.Sequential(
                 nn.Conv2d(3, 64, 7, 2, 3, bias=False),
                 nn.BatchNorm2d(64),
                 nn.ReLU(inplace=True),
                 nn.MaxPool2d(3, 2, 1))
         
-        # 重复的layer，分别有3，4，6，3个residual block
+        # repeated layer，has 3，4，6，3 residual blocks respectively
         self.layer1 = self._make_layer( 64, 128, 3)
         self.layer2 = self._make_layer( 128, 256, 4, stride=2)
         self.layer3 = self._make_layer( 256, 512, 6, stride=2)
         self.layer4 = self._make_layer( 512, 512, 3, stride=2)
 
-        #分类用的全连接
+        #Fully connected layer for classification
         self.fc = nn.Linear(512, num_classes)
     
     def _make_layer(self,  inchannel, outchannel, block_num, stride=1):
         '''
-        构建layer,包含多个residual block
+        construct layer, includingresidual block
         '''
         shortcut = nn.Sequential(
                 nn.Conv2d(inchannel,outchannel,1,stride, bias=False),
