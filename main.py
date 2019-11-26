@@ -4,7 +4,7 @@ import os
 import torch as t
 import models
 from config import opt
-from data.dataset import DogCat
+from data.dataset import Classification
 from torch.utils.data import DataLoader
 from torch.autograd import Variable
 from torchnet import meter
@@ -23,7 +23,7 @@ def test(**kwargs):
     if opt.use_gpu: model.cuda()
 
     # data
-    train_data = DogCat(opt.test_data_root,test=True)
+    train_data = Classification(opt.test_data_root,test=True)
     test_dataloader = DataLoader(train_data,batch_size=opt.batch_size,shuffle=False,num_workers=opt.num_workers)
     results = []
     for ii,(data,path) in enumerate(test_dataloader):
@@ -59,8 +59,8 @@ def train(**kwargs):
     if opt.use_gpu: model.cuda()
 
     # step2: data
-    train_data = DogCat(opt.train_data_root,train=True)
-    val_data = DogCat(opt.train_data_root,train=False)
+    train_data = Classification(opt.train_data_root,train=True)
+    val_data = Classification(opt.train_data_root,train=False)
     train_dataloader = DataLoader(train_data,opt.batch_size,
                         shuffle=True,num_workers=opt.num_workers)
     val_dataloader = DataLoader(val_data,opt.batch_size,
