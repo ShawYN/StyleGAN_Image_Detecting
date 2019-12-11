@@ -18,13 +18,17 @@ class BasicModule(t.nn.Module):
         '''
         self.load_state_dict(t.load(path))
 
-    def save(self, name=None):
+    #def save(self, name=None):
+    def save(self, name='ResNet152'):
         '''
         保存模型，默认使用“模型名字+时间”作为文件名
         '''
         if name is None:
             #prefix = 'checkpoints/' + self.model_name + '_'
             prefix = 'J:\\checkpoints\\' + self.model_name + '_'
+            name = time.strftime(prefix + '%m%d_%H_%M_%S.pth')
+        else:
+            prefix = 'J:\\checkpoints\\' + name + '_'
             name = time.strftime(prefix + '%m%d_%H_%M_%S.pth')
         t.save(self.state_dict(), name)
         return name
